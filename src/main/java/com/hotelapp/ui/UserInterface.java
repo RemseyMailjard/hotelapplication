@@ -6,9 +6,11 @@ import com.hotelapp.model.Reservation;
 import com.hotelapp.model.Room;
 import com.hotelapp.model.RoomType;
 import com.hotelapp.service.EmployeeService;
+import com.hotelapp.service.LoadDataService;
 import com.hotelapp.service.ReservationService;
 import com.hotelapp.service.RoomService;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Scanner;
 
@@ -25,7 +27,7 @@ public class UserInterface {
 	private Reservation reservation;
 	private Employee employee;
 
-	public UserInterface() {
+	public UserInterface()  {
 		guest = new Guest("John Smith", "555-1234", "john.smith@email.com");
 		room = new Room(101, RoomType.KING, 200.00, true);
 		employee = new Employee(1, "Sarah Johnson", "Front Desk Clerk");
@@ -36,7 +38,26 @@ public class UserInterface {
 				LocalDate.of(2026, 5, 10),
 				LocalDate.of(2026, 5, 13)
 		);
+
+		try {
+			String data = LoadDataService.loadData();
+			int number = Integer.parseInt(data);
+
+			System.out.println("Number: " + number);
+
+		} catch (IOException e) {
+			System.out.println("Could not load the file.");
+
+		} catch (NumberFormatException e) {
+			System.out.println("The file does not contain a valid number.");
+			System.out.println("Enter the correct filename for the file with numbers");
+			String newFilename = scanner.nextLine();
+
+		} catch (Exception e) {
+
+		}
 	}
+
 
 	public void startMenu() {
 		boolean running = true;
@@ -136,6 +157,8 @@ public class UserInterface {
 
 		employeeService.assignRole(employee, role);
 	}
+
+	// IF there is an error, go back to the main menu. OR ask again for the file)
 
 	private void pause() {
 		System.out.println();
